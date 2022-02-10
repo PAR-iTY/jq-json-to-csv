@@ -1,3 +1,5 @@
+> work in progress personal project
+
 # JSON parser
 
 - uses jq and python to process JSON data with undefined structure and nesting
