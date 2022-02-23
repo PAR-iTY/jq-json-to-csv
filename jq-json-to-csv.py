@@ -16,11 +16,14 @@ os.environ['PYTHONUNBUFFERED'] = '1'
 #                  CONFIG                 #
 ###########################################
 
+# add delimiter back in (something like '__')
+
 
 def config(input='', columns='', uid=''):
 
     if not input:
-        input = 'json/test.json'
+        # input = 'json/test.json'
+        input = 'json/jq-test.json'
 
     # list of column names
     # expect from CLI: comma seperated string wrapped in quotes
@@ -29,6 +32,8 @@ def config(input='', columns='', uid=''):
         if input == 'json/test.json':
             # (these are just for example to match supplied test.json file)
             columns = ['balance', 'eyeColor', 'company', 'name']
+        elif input == 'json/jq-test.json':
+            columns = ['someKey', 'column1', 'column2', 'column3']
 
     else:
         columns = list(columns.split(', '))
@@ -45,7 +50,7 @@ def config(input='', columns='', uid=''):
     return {'columns': columns, 'uid': uid, 'cmd': cmd}
 
 ###########################################
-#               FUNCTIONS                 #
+#                   JQ                    #
 ###########################################
 
 
@@ -62,7 +67,17 @@ def jq_pipe(cmd):
 
 def gen_read_line(jq_out):
     for line in jq_out:
-        yield line
+
+        # is there any gain to doing this minor filtering/processing in this function vs in gen_process_lines?
+
+        # deserialise line string
+        line_obj = json.loads(line)
+
+        # skip falsy values
+        if not line_obj[1]:
+            continue
+
+        yield line_obj
 
 ###########################################
 #               PROCESSING                #
@@ -84,44 +99,100 @@ def gen_process_lines(config):
     row_paths = copy(row_base)
 
     for line in gen_read_line(data):
-        # deserialise line string
-        line_obj = json.loads(line)
 
-        # skip falsy values
-        if not line_obj[1]:
-            continue
+        # full-path fieldnames method
+        # in this approach, the plain column names are used for detection
+        # but all fieldnames will be linePaths, not plain column names
+        # this is because the fieldnames are to show the nested structure
+        # --> remove the columns from fieldnames after processing
 
+        targetCol = line[0][-1]
+
+        # save path (for length checks)
+        linePath = line[0]
+
+        # get path list items as strings and concatenate
+        # convert to string first to handle array index ints
+        # i.e. some.nested.jq.path.0
+        colPath = '.'.join(map(str, linePath))
+
+        if targetCol in columns:
+
+            # detect row uid overwrite
+            if targetCol == uid:
+
+                key_match = [key for key in row if key.endswith(
+                    targetCol) and len(key.split('.')) == len(linePath)]
+
+                # must run a path-piece length check
+                # because colPaths will all be unique due to array indexing
+
+                # if new linePath length is same as one saved in row already
+
+                # key_match expression
+                # relies on delimiter not being in key name
+                # make delim '__' or something unusual
+
+                # for key in row:
+                #     if key.endswith(targetCol) and len(key.split('.')) == len(linePath):
+                #         print('key loop match:', key)
+
+                if key_match:
+                    print('key_match:', key_match)
+
+                    # iteration has hit second uid col
+                    # print('detected new uid')
+
+                    # first yield finished old row
+                    yield row
+
+                    # then reset row dict
+                    row = copy(row_base)
+
+                    # then add the new uid to the new row
+                    # row[colPath] = line[1]
+
+            row[colPath] = line[1]
+
+        print('final row')
+
+        yield row
+
+
+# enumerate nested fieldname duplicates method
+'''
         # loop through target columns
         for col in columns:
 
             # if target is the last path item
-            if col == line_obj[0][-1]:
+            if col == line[0][-1]:
+
+                # print(line[1])
 
                 # save path length if it doesnt exist yet
                 if not row_paths[col]:
-                    row_paths[col] = line_obj[0]
+                    row_paths[col] = line[0]
 
                 # detect overwrite if row already has a col value
                 # if it does, need to enumerate to col.n
                 if row[col]:
 
-                    # if col == row uid then start a new row instead
-                    if col == uid and len(row_paths[col]) == len(line_obj[0]):
-                        # print(col, len(row_paths[col]), len(line_obj[0]))
+                    # if col = row uid first yield old row and then start a new row
+                    if col == uid and len(row_paths[col]) == len(line[0]):
                         # table id column name matches latest path piece
 
                         # iteration has hit second uid col
-                        # yield finished old row
+                        # first yield finished old row
                         yield row
 
-                        # reset row dicts
+                        # then reset row dicts
                         # (no longer with inherited keys from previous row)
                         row = copy(row_base)
                         row_paths = copy(row_base)
 
                         # add new row uid to new row dicts
-                        row[uid] = line_obj[1]
-                        row_paths[uid] = line_obj[0]
+                        row[uid] = line[1]
+                        row_paths[uid] = line[0]
                         break
 
                     # if code-execution reaches here:
@@ -137,13 +208,13 @@ def gen_process_lines(config):
                             # count matches
                             count += 1
 
-                    row[f'{col}.{count}'] = line_obj[1]
+                    row[f'{col}.{count}'] = line[1]
                     break
 
                 # if code-execution reaches here:
                 # must be a regular col to add
-                row[col] = line_obj[1]
-                row_paths[col] = line_obj[0]
+                row[col] = line[1]
+                row_paths[col] = line[0]
 
                 break
 
@@ -151,7 +222,7 @@ def gen_process_lines(config):
 
     # catch final row (will at least have a new populated uid)
     yield row
-
+'''
 
 ###########################################
 #                   CSV                   #

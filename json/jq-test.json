@@ -1,0 +1,110 @@
+[
+  {
+    "parentOfTargetColumn": {
+      "someKey": "someValue1",
+      "column1": "c1 value 1",
+      "column2": "c2 value 1",
+      "column3": "c3 value 1",
+      "parent2": {
+        "column3": "c3 value 1"
+      }
+    },
+    "nestedLists": [1, [2, [3, [4]]]],
+    "ValuesTypesDelims": {
+      "delim.in.key.1": "delim.in.value.1",
+      "delim.in.key.2": "delim.in.value.2",
+      "delim.in.key.3": "delim.in.value.3",
+      "MixedArray": [0, [], {}, "", false, null],
+      "NumberZero": 0,
+      "EmptyArray": [],
+      "EmptyObject": {},
+      "EmptyString": "",
+      "false": false,
+      "null": null
+    },
+    "DifferentLevelDuplicateKey": [
+      { "DifferentLevelDuplicateKey": "shares keyname with its parent" },
+      { "DuplicateSiblingKey": "duplicate value 1" },
+      {
+        "DuplicateSiblingKey": "duplicate value 2",
+        "ArrayOfDicts": [
+          { "key1": "val1" },
+          { "key2": "val2" },
+          { "key3": "val3" }
+        ]
+      }
+    ]
+  },
+  {
+    "parentOfTargetColumn": {
+      "someKey": "someValue2",
+      "column1": "c1 value 2",
+      "column2": "c2 value 2",
+      "column3": "c3 value 2",
+      "parent2": {
+        "column3": "c3 value 2"
+      }
+    },
+    "nestedLists": [1, [2, [3, [4]]]],
+    "ValuesTypesDelims": {
+      "delim.in.key.1": "delim.in.value.1",
+      "delim.in.key.2": "delim.in.value.2",
+      "delim.in.key.3": "delim.in.value.3",
+      "MixedArray": [0, [], {}, "", false, null],
+      "NumberZero": 0,
+      "EmptyArray": [],
+      "EmptyObject": {},
+      "EmptyString": "",
+      "false": false,
+      "null": null
+    },
+    "DifferentLevelDuplicateKey": [
+      { "DifferentLevelDuplicateKey": "shares keyname with its parent" },
+      { "DuplicateSiblingKey": "duplicate value 1" },
+      {
+        "DuplicateSiblingKey": "duplicate value 2",
+        "ArrayOfDicts": [
+          { "key1": "val1" },
+          { "key2": "val2" },
+          { "key3": "val3" }
+        ]
+      }
+    ]
+  },
+  {
+    "parentOfTargetColumn": {
+      "someKey": "someValue3",
+      "column1": "c1 value 3",
+      "column2": "c2 value 3",
+      "column3": "c3 value 3",
+      "parent2": {
+        "column3": "c3 value 3"
+      }
+    },
+    "nestedLists": [1, [2, [3, [4]]]],
+    "ValuesTypesDelims": {
+      "delim.in.key.1": "delim.in.value.1",
+      "delim.in.key.2": "delim.in.value.2",
+      "delim.in.key.3": "delim.in.value.3",
+      "MixedArray": [0, [], {}, "", false, null],
+      "NumberZero": 0,
+      "EmptyArray": [],
+      "EmptyObject": {},
+      "EmptyString": "",
+      "false": false,
+      "null": null
+    },
+    "DifferentLevelDuplicateKey": [
+      { "DifferentLevelDuplicateKey": "shares keyname with its parent" },
+      { "DuplicateSiblingKey": "duplicate value 1" },
+      {
+        "DuplicateSiblingKey": "duplicate value 2",
+        "ArrayOfDicts": [
+          { "key1": "val1" },
+          { "key2": "val2" },
+          { "key3": "val3" }
+        ]
+      }
+    ]
+  }
+]
