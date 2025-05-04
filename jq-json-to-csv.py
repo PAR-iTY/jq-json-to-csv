@@ -158,7 +158,7 @@ def gen_process_lines(config):
 
             row[colPath] = line[1]
 
-        print('final row')
+        # print('final row')
 
         yield row
 
