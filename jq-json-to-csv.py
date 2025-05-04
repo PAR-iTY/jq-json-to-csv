@@ -1,3 +1,6 @@
+# managing the GIL and performance of mem/cpu can be optimised
+# https://www.youtube.com/watch?v=X7vBbelRXn0
+
 # standard libraries
 from copy import copy
 import csv
@@ -10,7 +13,8 @@ import os
 import fire
 
 # ensures buffers are flushed from child processes
-os.environ['PYTHONUNBUFFERED'] = '1'
+# try remove, as this is currently a 2x parse solution
+# os.environ['PYTHONUNBUFFERED'] = '1'
 
 ###########################################
 #                  CONFIG                 #
